@@ -7,7 +7,7 @@
 	import {
 		IconBuildingFactory2, IconLogout, IconBell, IconApps,
 		IconClipboardList, IconReceipt2, IconStack, IconBuilding,
-		IconChevronRight, IconClock, IconLoader2, IconShieldLock
+		IconChevronRight, IconClock, IconLoader2, IconShieldLock, IconPackage
 	} from '@tabler/icons-svelte';
 	import { goto } from '$app/navigation';
 	import { signOut } from 'firebase/auth';
@@ -165,6 +165,21 @@
 					<div>
 						<h3 class="text-[13px] font-semibold text-gray-800">Pengajuan Anggaran</h3>
 						<p class="text-[11px] text-gray-400 mt-0.5">Ajukan kebutuhan dana</p>
+					</div>
+				</button>
+				<button
+					class="border border-gray-100 rounded-xl p-4 cursor-pointer flex flex-col gap-2.5 text-left bg-white hover:border-[var(--g)]/30 hover:shadow-sm transition-all active:scale-[0.97] col-span-2"
+					onclick={() => goto('/packing-list')}
+				>
+					<div class="flex items-center gap-3">
+						<div class="w-11 h-11 rounded-xl flex items-center justify-center bg-[var(--gl)]">
+							<IconPackage size={22} class="text-[var(--g)]" />
+						</div>
+						<div>
+							<h3 class="text-[13px] font-semibold text-gray-800">Packing List</h3>
+							<p class="text-[11px] text-gray-400 mt-0.5">Pengajuan & inventory proyek</p>
+						</div>
+						<IconChevronRight size={16} class="text-gray-300 ml-auto" />
 					</div>
 				</button>
 				{#if isSuperAdmin}
