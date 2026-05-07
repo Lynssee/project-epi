@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  --color-g: #1D9E75;
+  --color-gl: #E1F5EE;
+  --color-gd: #0F6E56;
+  --color-g2: #085041;
+  --color-p: #534AB7;
+  --color-pl: #EEEDFE;
+  --color-pd: #3C3489;
+  --color-am: #EF9F27;
+  --color-aml: #FAEEDA;
+  --color-amd: #633806;
+  --color-re: #E24B4A;
+  --color-rel: #FCEBEB;
+  --color-red-brand: #791F1F;
+  --color-gg: #EAF3DE;
+  --color-ggd: #27500A;
+}
+
+:root {
+  --g: #1D9E75;
+  --gl: #E1F5EE;
+  --gd: #0F6E56;
+  --g2: #085041;
+  --p: #534AB7;
+  --pl: #EEEDFE;
+  --pd: #3C3489;
+  --am: #EF9F27;
+  --aml: #FAEEDA;
+  --amd: #633806;
+  --re: #E24B4A;
+  --rel: #FCEBEB;
+  --red: #791F1F;
+  --gg: #EAF3DE;
+  --ggd: #27500A;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', var(--font-sans, system-ui, sans-serif);
+  background: #f3f4f6;
+  margin: 0;
+  padding: 0;
+}
+
+/* App Container */
+.app-container {
+  @apply max-w-[420px] mx-auto bg-white min-h-screen relative shadow-lg flex flex-col;
+}
+
+/* Topbar */
+.tb {
+  @apply px-4 py-3 flex items-center gap-2.5 text-white sticky top-0 z-30;
+}
+.tb.green { background: var(--g); }
+.tb.purple { background: var(--p); }
+.tb h1 {
+  @apply text-[15px] font-medium flex-1 whitespace-nowrap overflow-hidden text-ellipsis;
+}
+.tbb {
+  @apply bg-transparent border-none text-white cursor-pointer p-1 flex items-center rounded-lg transition-colors;
+}
+.tbb:hover { background: rgba(255,255,255,0.15); }
+
+/* Form inputs */
+.f-label {
+  @apply block text-[11px] text-gray-500 mb-1 font-medium tracking-wider uppercase;
+}
+.f-input, .f-select, .f-textarea {
+  @apply w-full px-3 py-2.5 border border-gray-200 rounded-lg text-[14px] text-gray-800 bg-white transition-colors;
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus {
+  @apply outline-none border-[var(--g)] ring-2 ring-[var(--g)]/10;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply w-full py-3 bg-[var(--g)] text-white border-none rounded-xl text-[15px] font-medium cursor-pointer flex items-center justify-center gap-2 transition-all active:scale-[0.98];
+}
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-primary.purple { @apply bg-[var(--p)]; }
+.btn-primary:disabled {
+  @apply opacity-60 cursor-not-allowed;
+}
+
+.btn-action {
+  @apply w-full py-2.5 border border-dashed border-[var(--g)] rounded-lg bg-[var(--gl)] text-[var(--gd)] text-[13px] cursor-pointer flex items-center justify-center gap-1.5 mt-2 font-medium transition-all active:scale-[0.98];
+}
+.btn-action.purple {
+  @apply border-[var(--p)] bg-[var(--pl)] text-[var(--pd)];
+}
+
+/* Cards */
+.card-section {
+  @apply border border-gray-200 rounded-xl p-3.5 mb-3;
+}
+.card-section h4 {
+  @apply text-[13px] font-semibold text-gray-800 mb-3 flex items-center gap-2;
+}
+
+/* Badges */
+.badge {
+  @apply text-[10px] py-0.5 px-2.5 rounded-full font-semibold whitespace-nowrap;
+}
+.badge.warn { @apply bg-[var(--aml)] text-[var(--amd)]; }
+.badge.ok { @apply bg-[var(--gg)] text-[var(--ggd)]; }
+.badge.pend { @apply bg-[var(--pl)] text-[var(--pd)]; }
+.badge.rej { @apply bg-[var(--rel)] text-[var(--red)]; }
+
+/* Bottom Bar */
+.bottom-bar {
+  @apply p-3.5 border-t border-gray-100 bg-white sticky bottom-0 z-20;
+}
+
+/* Loading Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin { animation: spin 0.7s linear infinite; }
+
+/* Scroll body */
+.scroll-body {
+  @apply flex-1 overflow-y-auto;
+  -webkit-overflow-scrolling: touch;
+}

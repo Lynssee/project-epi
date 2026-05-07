@@ -1,0 +1,807 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1D9E75;--gl:#E1F5EE;--gd:#0F6E56;--g2:#085041;
+  --p:#534AB7;--pl:#EEEDFE;--pd:#3C3489;
+  --am:#EF9F27;--aml:#FAEEDA;--amd:#633806;
+  --re:#E24B4A;--rel:#FCEBEB;--red:#791F1F;
+  --gg:#EAF3DE;--ggd:#27500A;
+}
+body{font-family:var(--font-sans,system-ui,sans-serif);background:var(--color-background-tertiary)}
+.app{max-width:420px;margin:0 auto;background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:640px}
+.screen.active{display:flex}
+
+/* TOPBAR */
+.tb{padding:13px 16px;display:flex;align-items:center;gap:10px;color:#fff}
+.tb.green{background:var(--g)}
+.tb.purple{background:var(--p)}
+.tb h1{font-size:15px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbb{background:none;border:none;color:#fff;cursor:pointer;padding:4px;font-size:19px;display:flex;align-items:center}
+
+/* LOGIN */
+.lhero{background:var(--g);padding:40px 24px 32px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff}
+.llogo{width:56px;height:56px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px}
+.lhero h2{font-size:20px;font-weight:500}
+.lhero p{font-size:13px;opacity:.75}
+.lbody{padding:22px 16px}
+.f label{display:block;font-size:11px;color:var(--color-text-secondary);margin-bottom:5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.f{margin-bottom:14px}
+.f input,.f select,.f textarea{width:100%;padding:10px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;color:var(--color-text-primary);background:var(--color-background-primary)}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--g)}
+.btnp{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:500;cursor:pointer}
+.btnp.pu{background:var(--p)}
+
+/* HOME */
+.scroll-body{flex:1;padding:14px 16px;overflow-y:auto}
+.sec-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.05em;text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:5px}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.qa{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:7px}
+.qa:active{background:var(--color-background-secondary)}
+.qa-ic{width:40px;height:40px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:20px}
+.qa-ic.g{background:var(--gl)}.qa-ic.p{background:var(--pl)}.qa-ic.a{background:var(--aml)}
+.qa h3{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.3}
+.qa p{font-size:11px;color:var(--color-text-secondary)}
+
+/* PROJECT CARDS */
+.pcard{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.pcard:active{background:var(--color-background-secondary)}
+.pic{width:40px;height:40px;border-radius:var(--border-radius-md);background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.pinfo{flex:1;min-width:0}
+.pinfo h3{font-size:13px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pinfo p{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.bdg{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
+.bdg.warn{background:var(--aml);color:var(--amd)}
+.bdg.ok{background:var(--gg);color:var(--ggd)}
+.bdg.pend{background:var(--pl);color:var(--pd)}
+.bdg.rej{background:var(--rel);color:var(--red)}
+
+/* STAT ROW */
+.stat2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.stat-c{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px}
+.stat-c p{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;font-weight:500}
+.stat-c strong{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+
+/* REPORT META */
+.rmeta{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 13px;margin:0 16px 12px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rmeta-i label{font-size:10px;color:var(--color-text-secondary);display:block;margin-bottom:2px;font-weight:500;text-transform:uppercase}
+.rmeta-i span{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+
+/* SEGMENT NAV */
+.segnav{display:flex;gap:2px;background:var(--color-background-secondary);padding:3px;border-radius:var(--border-radius-md);margin:0 16px 12px;overflow-x:auto}
+.segb{flex:1;padding:7px 4px;border:none;background:none;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;color:var(--color-text-secondary);font-weight:500;min-width:48px}
+.segb.on{background:var(--color-background-primary);color:var(--g);border:0.5px solid var(--color-border-tertiary)}
+
+/* TAB CONTENT */
+.tc{display:none;padding:0 16px 14px}.tc.on{display:block}
+
+/* SECTION CARD */
+.sc{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;margin-bottom:11px}
+.sc h4{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sc h4 i{font-size:15px}
+.row-i{border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:10px;margin-bottom:10px}
+.row-i:last-child{border:none;padding:0;margin:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px}
+.fs label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:4px;font-weight:500}
+.fs input,.fs select,.fs textarea{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-primary);background:var(--color-background-primary)}
+.fs input:focus,.fs select:focus,.fs textarea:focus{outline:none;border-color:var(--g)}
+.btna{width:100%;padding:9px;border:0.5px dashed var(--g);border-radius:var(--border-radius-md);background:var(--gl);color:var(--gd);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:9px}
+.btna.pu{border-color:var(--p);background:var(--pl);color:var(--pd)}
+
+/* MODE TOGGLE (Material tab) */
+.mtog{display:grid;grid-template-columns:1fr 1fr;margin-bottom:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);overflow:hidden}
+.mtb{padding:9px;border:none;background:none;font-size:12px;cursor:pointer;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:center;gap:5px;font-weight:500}
+.mtb.on{background:var(--g);color:#fff}
+.mtb:first-child{border-right:0.5px solid var(--color-border-secondary)}
+
+/* PACKING LIST */
+.repeat-strip{border:0.5px solid #9FE1CB;border-radius:var(--border-radius-md);padding:10px 12px;background:var(--gl);display:flex;align-items:center;gap:9px;cursor:pointer;margin-bottom:10px}
+.repeat-strip i{font-size:18px;color:var(--g)}
+.repeat-strip p{font-size:13px;font-weight:500;color:var(--gd)}
+.repeat-strip span{font-size:11px;color:var(--g)}
+.pk-filter{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:9px}
+.pk-pill{padding:6px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:none;font-size:12px;cursor:pointer;color:var(--color-text-secondary);white-space:nowrap}
+.pk-pill.on{border-color:var(--g);background:var(--gl);color:var(--gd)}
+.search-wrap{position:relative;margin-bottom:9px}
+.search-wrap input{width:100%;padding:8px 12px 8px 34px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-primary);background:var(--color-background-secondary)}
+.search-wrap input:focus{outline:none;border-color:var(--g);background:var(--color-background-primary)}
+.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--color-text-tertiary)}
+.cat-h{display:flex;align-items:center;gap:7px;padding:8px 0 5px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;margin-bottom:4px}
+.cat-h span{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.04em;text-transform:uppercase;flex:1}
+.cat-h em{font-size:11px;color:var(--color-text-tertiary);font-style:normal}
+.pk-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.pk-item:last-child{border:none}
+.pk-item.sel{background:none}
+.chk{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:var(--color-background-primary)}
+.chk.on{background:var(--g);border-color:var(--g)}
+.chk.on i{color:#fff}
+.chk i{font-size:13px;color:transparent}
+.pk-label{flex:1;min-width:0}
+.pk-label p{font-size:13px;color:var(--color-text-primary);font-weight:500}
+.pk-label span{font-size:11px;color:var(--color-text-secondary)}
+.qty-wrap{display:flex;align-items:center;gap:0;opacity:.25;transition:opacity .15s}
+.qty-wrap.on{opacity:1}
+.qb{width:26px;height:26px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);font-size:15px;cursor:pointer;color:var(--color-text-primary);display:flex;align-items:center;justify-content:center}
+.qb:first-child{border-radius:var(--border-radius-md) 0 0 var(--border-radius-md)}
+.qb:last-child{border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.qinp{width:36px;height:26px;border:0.5px solid var(--color-border-secondary);border-left:none;border-right:none;text-align:center;font-size:12px;font-weight:500;color:var(--color-text-primary);background:var(--color-background-primary)}
+.qinp:focus{outline:none}
+.qu{font-size:10px;color:var(--color-text-secondary);margin-left:4px}
+
+/* MANPOWER / ATTENDANCE */
+.hr{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hr:last-child{border:none}
+.hav{width:34px;height:34px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--gd);flex-shrink:0}
+.hinfo{flex:1;min-width:0}
+.hinfo p{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.hinfo span{font-size:11px;color:var(--color-text-secondary)}
+.htog{display:flex;gap:3px}
+.htb{padding:4px 8px;border-radius:20px;border:0.5px solid var(--color-border-secondary);font-size:11px;cursor:pointer;background:none;color:var(--color-text-secondary)}
+.htb.h{background:var(--gg);border-color:#3B6D11;color:var(--ggd)}
+.htb.a{background:var(--rel);border-color:#A32D2D;color:var(--red)}
+.htb.s{background:var(--aml);border-color:#854F0B;color:var(--amd)}
+
+/* BUDGET LIST ITEM */
+.bcard{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.bcard:active{background:var(--color-background-secondary)}
+.bic{width:40px;height:40px;border-radius:var(--border-radius-md);background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.bi-detail{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.bi-detail:last-child{border:none}
+
+/* TIMELINE */
+.tl-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.tl-row:last-child{margin:0}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+
+/* BOTTOM BAR */
+.bbar{padding:10px 16px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.bbar-sum{display:flex;align-items:center;margin-bottom:8px;gap:6px}
+.bbar-sum span{font-size:12px;color:var(--color-text-secondary);flex:1}
+.bbar-sum strong{font-size:13px;font-weight:500;color:var(--gd)}
+.brow{display:flex;gap:8px}
+.bsave{flex:1;padding:11px;background:var(--g);color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer}
+.bsave.pu{background:var(--p)}
+.bdraft{padding:11px 13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:none;color:var(--color-text-secondary);font-size:13px;cursor:pointer}
+
+/* STATUS PILL */
+.timeline-step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.timeline-step:last-child{border:none;padding-bottom:0}
+
+/* TOAST */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#27500A;color:#fff;padding:9px 18px;border-radius:var(--border-radius-md);font-size:13px;z-index:999;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1}
+
+/* UTILS */
+.mb6{margin-bottom:6px}.mb8{margin-bottom:8px}.mb10{margin-bottom:10px}.mb12{margin-bottom:12px}
+</style>
+
+<h2 class="sr-only">Aplikasi daily report proyek lengkap — login, beranda, laporan harian dengan packing list, dan pengajuan anggaran</h2>
+<div id="toast" class="toast"></div>
+
+<div class="app">
+
+<!-- ═══════════════════════════════
+     S1 — LOGIN
+═══════════════════════════════ -->
+<div class="screen active" id="s1">
+  <div class="lhero">
+    <div class="llogo"><i class="ti ti-building-factory-2" aria-hidden="true"></i></div>
+    <h2>Daily Report</h2>
+    <p>Sistem Laporan Harian Proyek</p>
+  </div>
+  <div class="lbody">
+    <div class="f"><label>Username</label><input type="text" id="uname" value="IRFAN" placeholder="Username leader"></div>
+    <div class="f"><label>Password</label><input type="password" value="••••••" placeholder="Password"></div>
+    <div style="height:6px"></div>
+    <button class="btnp" onclick="login()"><i class="ti ti-login" aria-hidden="true"></i> Masuk</button>
+    <p style="font-size:12px;color:var(--color-text-tertiary);text-align:center;margin-top:14px">Akses hanya untuk leader proyek</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     S2 — HOME / BERANDA
+═══════════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="tb green">
+    <i class="ti ti-building-factory-2" style="font-size:20px" aria-hidden="true"></i>
+    <h1>Beranda</h1>
+    <button class="tbb" onclick="go('s1')" title="Keluar"><i class="ti ti-logout" aria-hidden="true"></i></button>
+  </div>
+  <div class="scroll-body">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 0 4px">
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--gd)" id="uavatar">IR</div>
+      <div>
+        <p style="font-size:14px;font-weight:500;color:var(--color-text-primary)">Halo, <span id="udisp">IRFAN</span></p>
+        <p style="font-size:11px;color:var(--color-text-secondary)">Kamis, 7 Mei 2026</p>
+      </div>
+      <div style="margin-left:auto;position:relative;cursor:pointer">
+        <i class="ti ti-bell" style="font-size:20px;color:var(--color-text-secondary)" aria-hidden="true"></i>
+        <div style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--re);border-radius:50%;border:1.5px solid var(--color-background-primary)"></div>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-top:16px"><i class="ti ti-apps" aria-hidden="true"></i> Menu Utama</div>
+    <div class="qa-grid">
+      <div class="qa" onclick="go('s3')">
+        <div class="qa-ic g"><i class="ti ti-clipboard-list" style="color:var(--g)" aria-hidden="true"></i></div>
+        <h3>Laporan Harian</h3>
+        <p>Input progres & kehadiran</p>
+      </div>
+      <div class="qa" onclick="go('s-blist')">
+        <div class="qa-ic p"><i class="ti ti-receipt-2" style="color:var(--p)" aria-hidden="true"></i></div>
+        <h3>Pengajuan Anggaran</h3>
+        <p>Ajukan kebutuhan dana</p>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-top:18px"><i class="ti ti-stack" aria-hidden="true"></i> Proyek Saya</div>
+    <div class="pcard" onclick="openReport('Gedung Kantor Pusat Tangerang','698')">
+      <div class="pic"><i class="ti ti-building" style="color:var(--g)" aria-hidden="true"></i></div>
+      <div class="pinfo"><h3>Gedung Kantor Pusat</h3><p>Tangerang · ID-698</p></div>
+      <span class="bdg warn">Belum lapor</span>
+      <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:15px" aria-hidden="true"></i>
+    </div>
+    <div class="pcard" onclick="openReport('Renovasi Gudang Bekasi','412')">
+      <div class="pic"><i class="ti ti-home" style="color:var(--g)" aria-hidden="true"></i></div>
+      <div class="pinfo"><h3>Renovasi Gudang Bekasi</h3><p>Bekasi · ID-412 · +SANDI</p></div>
+      <span class="bdg ok">Sudah lapor</span>
+      <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:15px" aria-hidden="true"></i>
+    </div>
+    <div class="pcard" onclick="openReport('Epoxy Lantai Pabrik Karawang','531')">
+      <div class="pic"><i class="ti ti-layout-grid" style="color:var(--g)" aria-hidden="true"></i></div>
+      <div class="pinfo"><h3>Epoxy Lantai Pabrik</h3><p>Karawang · ID-531</p></div>
+      <span class="bdg warn">Belum lapor</span>
+      <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:15px" aria-hidden="true"></i>
+    </div>
+
+    <div class="sec-title" style="margin-top:18px"><i class="ti ti-clock" aria-hidden="true"></i> Pengajuan Terakhir</div>
+    <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer" onclick="go('s-bdetail')">
+        <i class="ti ti-receipt-2" style="font-size:16px;color:var(--p)" aria-hidden="true"></i>
+        <div style="flex:1"><p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Cat Epoxy & Thinner</p><p style="font-size:11px;color:var(--color-text-secondary)">Gedung Kantor Pusat · 6 Mei</p></div>
+        <span class="bdg pend">Menunggu</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer" onclick="go('s-bdetail')">
+        <i class="ti ti-receipt-2" style="font-size:16px;color:var(--g)" aria-hidden="true"></i>
+        <div style="flex:1"><p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Pasir & Semen</p><p style="font-size:11px;color:var(--color-text-secondary)">Epoxy Lantai · 4 Mei</p></div>
+        <span class="bdg ok">Disetujui</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     S3 — LAPORAN HARIAN
+═══════════════════════════════ -->
+<div class="screen" id="s3">
+  <div class="tb green">
+    <button class="tbb" onclick="go('s2')"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+    <h1 id="r-title">Laporan Harian</h1>
+    <button class="tbb" onclick="toast('Riwayat laporan akan muncul di sini')"><i class="ti ti-history" aria-hidden="true"></i></button>
+  </div>
+  <div class="rmeta">
+    <div class="rmeta-i"><label>Tanggal</label><span>7 Mei 2026</span></div>
+    <div class="rmeta-i"><label>Prepared by</label><span id="r-by">IRFAN</span></div>
+    <div class="rmeta-i"><label>Proyek ID</label><span id="r-pid">#698</span></div>
+    <div class="rmeta-i"><label>Status</label><span style="color:var(--am);font-size:12px;font-weight:500">● Draft</span></div>
+  </div>
+  <div class="segnav">
+    <button class="segb on" onclick="tab('t1',this)">Jadwal</button>
+    <button class="segb" onclick="tab('t2',this)">Progress</button>
+    <button class="segb" onclick="tab('t3',this)">Material</button>
+    <button class="segb" onclick="tab('t4',this)">Tenaga</button>
+    <button class="segb" onclick="tab('t5',this)">Lainnya</button>
+  </div>
+  <div style="flex:1;overflow-y:auto">
+
+    <!-- TAB 1: JADWAL -->
+    <div class="tc on" id="t1">
+      <div class="sc">
+        <h4><i class="ti ti-calendar-time" style="color:var(--g)" aria-hidden="true"></i> Jadwal kegiatan</h4>
+        <div class="row-i">
+          <div class="fs mb8"><label>Aktivitas</label><input type="text" value="Pengecatan lantai epoxy area produksi"></div>
+          <div class="g2 mb8">
+            <div class="fs"><label>Jam mulai</label><input type="time" value="10:00"></div>
+            <div class="fs"><label>Jam selesai</label><input type="time" value="15:00"></div>
+          </div>
+          <div class="fs"><label>Status</label><select><option>complete</option><option>on-progress</option><option>pending</option></select></div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah jadwal</button>
+      </div>
+      <div class="sc">
+        <h4><i class="ti ti-list-check" style="color:var(--g)" aria-hidden="true"></i> Rencana besok</h4>
+        <div class="row-i">
+          <div class="fs mb8"><label>Deskripsi</label><input type="text" value="Finishing"></div>
+          <div class="fs mb8"><label>Aktivitas</label><input type="text" placeholder="Detail kegiatan..."></div>
+          <div class="fs"><label>Catatan</label><textarea rows="2" placeholder="..."></textarea></div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah rencana</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: PROGRESS -->
+    <div class="tc" id="t2">
+      <div class="sc">
+        <h4><i class="ti ti-chart-line" style="color:var(--g)" aria-hidden="true"></i> Progress pekerjaan</h4>
+        <div class="row-i">
+          <div class="fs mb8"><label>Kategori</label><input type="text" value="Jasa pengecatan lantai epoxy 800 micron (Foxapaint)"></div>
+          <div class="fs mb8"><label>Aktivitas</label><input type="text" placeholder="Detail aktivitas..."></div>
+          <div class="g2 mb8">
+            <div class="fs"><label>Nilai</label><input type="number" value="120"></div>
+            <div class="fs"><label>Satuan</label><select><option>m²</option><option>m³</option><option>unit</option><option>kg</option><option>ls</option></select></div>
+          </div>
+          <div class="fs"><label>Catatan</label><textarea rows="2" placeholder="Catatan..."></textarea></div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah progress</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: MATERIAL (dengan Packing List) -->
+    <div class="tc" id="t3">
+
+      <!-- Material Terpakai -->
+      <div class="sc">
+        <h4><i class="ti ti-package" style="color:var(--g)" aria-hidden="true"></i> Material terpakai</h4>
+        <div class="row-i">
+          <div class="fs mb8"><label>Jenis</label><input type="text" placeholder="Nama material..."></div>
+          <div class="g3">
+            <div class="fs"><label>Jumlah</label><input type="number" placeholder="0"></div>
+            <div class="fs"><label>Satuan</label><select><option>kg</option><option>liter</option><option>sak</option><option>m²</option></select></div>
+            <div class="fs"><label>Catatan</label><input type="text" placeholder="..."></div>
+          </div>
+        </div>
+        <div class="row-i">
+          <div class="fs mb8"><label>Jenis</label><input type="text" value="Cat Epoxy 800 micron"></div>
+          <div class="g3">
+            <div class="fs"><label>Jumlah</label><input type="number" value="5"></div>
+            <div class="fs"><label>Satuan</label><select><option>kg</option></select></div>
+            <div class="fs"><label>Catatan</label><input type="text" placeholder="..."></div>
+          </div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah material</button>
+      </div>
+
+      <!-- Stok Material -->
+      <div class="sc">
+        <h4><i class="ti ti-stack-2" style="color:var(--g)" aria-hidden="true"></i> Stok tersisa</h4>
+        <div class="row-i">
+          <div class="fs mb8"><label>Jenis</label><input type="text" placeholder="Nama material..."></div>
+          <div class="g2">
+            <div class="fs"><label>Jumlah</label><input type="number" placeholder="0"></div>
+            <div class="fs"><label>Satuan</label><select><option>kg</option><option>liter</option><option>sak</option></select></div>
+          </div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah stok</button>
+      </div>
+
+      <!-- KEBUTUHAN MATERIAL — Packing List -->
+      <div class="sc">
+        <h4><i class="ti ti-alert-triangle" style="color:var(--am)" aria-hidden="true"></i> Kebutuhan material
+          <span style="margin-left:auto;font-size:11px;background:var(--aml);color:var(--amd);padding:2px 8px;border-radius:20px;font-weight:500" id="pk-cnt">0 item</span>
+        </h4>
+
+        <!-- Mode Toggle -->
+        <div class="mtog">
+          <button class="mtb on" id="mb-pk" onclick="modeSwitch('pk')"><i class="ti ti-list-check" aria-hidden="true"></i> Packing list</button>
+          <button class="mtb" id="mb-man" onclick="modeSwitch('man')"><i class="ti ti-edit" aria-hidden="true"></i> Input manual</button>
+        </div>
+
+        <!-- PACKING LIST MODE -->
+        <div id="pk-mode">
+          <div class="repeat-strip" onclick="loadRepeat()">
+            <i class="ti ti-copy" aria-hidden="true"></i>
+            <div style="flex:1">
+              <p>Ulangi pengajuan terakhir</p>
+              <span>6 Mei 2026 — 12 item dipilih</span>
+            </div>
+            <i class="ti ti-chevron-right" style="color:var(--g);font-size:15px" aria-hidden="true"></i>
+          </div>
+          <div class="pk-filter">
+            <button class="pk-pill on" onclick="pkFilter('all',this)">Semua</button>
+            <button class="pk-pill" onclick="pkFilter('sel',this)">Dipilih</button>
+            <button class="pk-pill" onclick="pkFilter('epoxy',this)">Epoxy</button>
+            <button class="pk-pill" onclick="pkFilter('beton',this)">Beton</button>
+            <button class="pk-pill" onclick="pkFilter('finishing',this)">Finishing</button>
+            <button class="pk-pill" onclick="pkFilter('alat',this)">Alat</button>
+          </div>
+          <div class="search-wrap">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input type="text" placeholder="Cari material..." oninput="pkSearch(this.value)" id="pksearch">
+          </div>
+
+          <div id="pk-list">
+            <!-- EPOXY -->
+            <div class="cat-h" onclick="toggleCat('pke')">
+              <i class="ti ti-droplet" style="font-size:13px;color:var(--g)" aria-hidden="true"></i>
+              <span>Bahan Epoxy</span>
+              <em id="ce-cnt">0 dipilih</em>
+              <i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-text-tertiary)" id="ce-ico" aria-hidden="true"></i>
+            </div>
+            <div id="pke">
+              <div class="pk-item" data-cat="epoxy" data-name="Cat Epoxy 800 micron"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Cat Epoxy 800 micron</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+              <div class="pk-item" data-cat="epoxy" data-name="Hardener Epoxy"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Hardener Epoxy</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+              <div class="pk-item" data-cat="epoxy" data-name="Thinner Epoxy"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Thinner Epoxy</p><span>liter</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">ltr</span></div></div>
+              <div class="pk-item" data-cat="epoxy" data-name="Primer Epoxy"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Primer Epoxy</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+              <div class="pk-item" data-cat="epoxy" data-name="Roller Epoxy 30cm"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Roller Epoxy 30cm</p><span>pcs</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">pcs</span></div></div>
+            </div>
+            <!-- BETON -->
+            <div class="cat-h" onclick="toggleCat('pkb')">
+              <i class="ti ti-cube" style="font-size:13px;color:var(--amd)" aria-hidden="true"></i>
+              <span>Beton & Cor</span>
+              <em id="cb-cnt">0 dipilih</em>
+              <i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-text-tertiary)" id="cb-ico" aria-hidden="true"></i>
+            </div>
+            <div id="pkb">
+              <div class="pk-item" data-cat="beton" data-name="Semen Portland"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Semen Portland</p><span>sak</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">sak</span></div></div>
+              <div class="pk-item" data-cat="beton" data-name="Pasir Beton"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Pasir Beton</p><span>m³</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">m³</span></div></div>
+              <div class="pk-item" data-cat="beton" data-name="Kerikil / Split"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Kerikil / Split</p><span>m³</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">m³</span></div></div>
+              <div class="pk-item" data-cat="beton" data-name="Besi Beton D10"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Besi Beton D10</p><span>batang</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">btg</span></div></div>
+              <div class="pk-item" data-cat="beton" data-name="Kawat Bendrat"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Kawat Bendrat</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+            </div>
+            <!-- FINISHING -->
+            <div class="cat-h" onclick="toggleCat('pkf')">
+              <i class="ti ti-brush" style="font-size:13px;color:var(--p)" aria-hidden="true"></i>
+              <span>Finishing</span>
+              <em id="cf-cnt">0 dipilih</em>
+              <i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-text-tertiary)" id="cf-ico" aria-hidden="true"></i>
+            </div>
+            <div id="pkf">
+              <div class="pk-item" data-cat="finishing" data-name="Cat Tembok Putih"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Cat Tembok Putih</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+              <div class="pk-item" data-cat="finishing" data-name="Plamir Dinding"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Plamir Dinding</p><span>kg</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">kg</span></div></div>
+              <div class="pk-item" data-cat="finishing" data-name="Amplas #80"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Amplas #80</p><span>lembar</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">lbr</span></div></div>
+              <div class="pk-item" data-cat="finishing" data-name="Masking Tape 2 inch"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Masking Tape 2 inch</p><span>roll</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">roll</span></div></div>
+            </div>
+            <!-- ALAT -->
+            <div class="cat-h" onclick="toggleCat('pka')">
+              <i class="ti ti-tool" style="font-size:13px;color:var(--color-text-secondary)" aria-hidden="true"></i>
+              <span>Alat & APD</span>
+              <em id="ca-cnt">0 dipilih</em>
+              <i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-text-tertiary)" id="ca-ico" aria-hidden="true"></i>
+            </div>
+            <div id="pka">
+              <div class="pk-item" data-cat="alat" data-name="Sarung Tangan Karet"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Sarung Tangan Karet</p><span>pasang</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">psg</span></div></div>
+              <div class="pk-item" data-cat="alat" data-name="Masker Respirator"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Masker Respirator</p><span>pcs</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">pcs</span></div></div>
+              <div class="pk-item" data-cat="alat" data-name="Kuas Cat 4 inch"><div class="chk" onclick="ck(this)"><i class="ti ti-check" aria-hidden="true"></i></div><div class="pk-label"><p>Kuas Cat 4 inch</p><span>pcs</span></div><div class="qty-wrap"><button class="qb" onclick="qa(this,-1)">−</button><input class="qinp" type="number" value="1" min="1"><button class="qb" onclick="qa(this,1)">+</button><span class="qu">pcs</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANUAL MODE -->
+        <div id="man-mode" style="display:none">
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:9px 11px;margin-bottom:10px;font-size:12px;color:var(--color-text-secondary);display:flex;gap:7px;align-items:flex-start">
+            <i class="ti ti-info-circle" style="font-size:15px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i>
+            Untuk material di luar katalog proyek ini.
+          </div>
+          <div class="row-i">
+            <div class="fs mb8"><label>Nama material</label><input type="text" placeholder="Nama barang..."></div>
+            <div class="g3 mb8">
+              <div class="fs"><label>Jumlah</label><input type="number" placeholder="0"></div>
+              <div class="fs"><label>Satuan</label><select><option>kg</option><option>liter</option><option>sak</option><option>pcs</option><option>m²</option><option>m³</option></select></div>
+              <div class="fs"><label>Urgensi</label><select><option>Normal</option><option>Urgent</option></select></div>
+            </div>
+            <div class="fs"><label>Tanggal dibutuhkan</label><input type="date" value="2026-05-10"></div>
+          </div>
+          <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah item</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TENAGA -->
+    <div class="tc" id="t4">
+      <div class="sc">
+        <h4><i class="ti ti-users" style="color:var(--g)" aria-hidden="true"></i> Manpower</h4>
+        <div class="row-i">
+          <div class="g2 mb8">
+            <div class="fs"><label>Role</label><select><option>BORONGAN</option><option>HARIAN</option><option>MANDOR</option><option>SUPERVISOR</option></select></div>
+            <div class="fs"><label>Jumlah orang</label><input type="number" value="5"></div>
+          </div>
+          <div class="fs"><label>Catatan</label><input type="text" placeholder="..."></div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah role</button>
+      </div>
+      <div class="sc">
+        <h4><i class="ti ti-id-badge-2" style="color:var(--g)" aria-hidden="true"></i> Kehadiran pekerja</h4>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:11px;padding:4px 9px;border-radius:20px;background:var(--gg);color:var(--ggd);font-weight:500">H: 3</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:20px;background:var(--rel);color:var(--red);font-weight:500">A: 1</span>
+          <span style="font-size:11px;padding:4px 9px;border-radius:20px;background:var(--aml);color:var(--amd);font-weight:500">S: 0</span>
+        </div>
+        <div class="hr">
+          <div class="hav">AA</div>
+          <div class="hinfo"><p>ABDUL AZIZ</p><span>BORONGAN</span></div>
+          <div class="htog"><button class="htb h" onclick="tog(this,'h')">H</button><button class="htb" onclick="tog(this,'a')">A</button><button class="htb" onclick="tog(this,'s')">S</button></div>
+        </div>
+        <div class="hr">
+          <div class="hav">BK</div>
+          <div class="hinfo"><p>BUDI KURNIAWAN</p><span>BORONGAN</span></div>
+          <div class="htog"><button class="htb h" onclick="tog(this,'h')">H</button><button class="htb" onclick="tog(this,'a')">A</button><button class="htb" onclick="tog(this,'s')">S</button></div>
+        </div>
+        <div class="hr">
+          <div class="hav">SR</div>
+          <div class="hinfo"><p>SLAMET RIYADI</p><span>HARIAN</span></div>
+          <div class="htog"><button class="htb" onclick="tog(this,'h')">H</button><button class="htb a" onclick="tog(this,'a')">A</button><button class="htb" onclick="tog(this,'s')">S</button></div>
+        </div>
+        <div class="hr">
+          <div class="hav">DW</div>
+          <div class="hinfo"><p>DENI WIJAYA</p><span>BORONGAN</span></div>
+          <div class="htog"><button class="htb h" onclick="tog(this,'h')">H</button><button class="htb" onclick="tog(this,'a')">A</button><button class="htb" onclick="tog(this,'s')">S</button></div>
+        </div>
+        <button class="btna" style="margin-top:10px"><i class="ti ti-user-plus" aria-hidden="true"></i> Tambah pekerja</button>
+      </div>
+    </div>
+
+    <!-- TAB 5: LAINNYA -->
+    <div class="tc" id="t5">
+      <div class="sc">
+        <h4><i class="ti ti-alert-circle" style="color:var(--re)" aria-hidden="true"></i> Kendala / isu</h4>
+        <div class="row-i">
+          <div class="fs"><label>Deskripsi</label><textarea rows="3">Hujan deras mulai pukul 13.00</textarea></div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah kendala</button>
+      </div>
+      <div class="sc">
+        <h4><i class="ti ti-tool" style="color:var(--g)" aria-hidden="true"></i> Peralatan</h4>
+        <div class="row-i">
+          <div class="g2">
+            <div class="fs"><label>Nama alat</label><input type="text" placeholder="Nama alat..."></div>
+            <div class="fs"><label>Jumlah</label><input type="number" placeholder="0"></div>
+          </div>
+        </div>
+        <button class="btna"><i class="ti ti-plus" aria-hidden="true"></i> Tambah alat</button>
+      </div>
+      <div class="sc">
+        <h4><i class="ti ti-receipt" style="color:var(--g)" aria-hidden="true"></i> Catatan budget</h4>
+        <div class="fs mb10"><label>Catatan</label><textarea rows="2" placeholder="Catatan pengeluaran..."></textarea></div>
+        <div style="border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:14px;text-align:center;cursor:pointer">
+          <i class="ti ti-camera-plus" style="font-size:24px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin-top:5px">Upload foto nota / kwitansi</p>
+        </div>
+      </div>
+      <div class="sc">
+        <h4><i class="ti ti-camera" style="color:var(--g)" aria-hidden="true"></i> Dokumentasi lapangan</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="aspect-ratio:1;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--color-background-secondary)">
+            <i class="ti ti-plus" style="font-size:20px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+            <span style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px">Tambah foto</span>
+          </div>
+          <div style="aspect-ratio:1;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center">
+            <i class="ti ti-photo" style="font-size:30px;color:var(--gl)" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="bbar">
+    <div class="bbar-sum">
+      <span style="font-size:12px;color:var(--color-text-secondary)">Laporan belum dikirim</span>
+      <span style="font-size:11px;padding:3px 8px;background:var(--aml);color:var(--amd);border-radius:20px;font-weight:500">Draft</span>
+    </div>
+    <div class="brow">
+      <button class="bdraft" onclick="toast('Tersimpan sebagai draft ✓')"><i class="ti ti-device-floppy" aria-hidden="true"></i> Draft</button>
+      <button class="bsave" onclick="toast('Laporan berhasil dikirim! ✓')"><i class="ti ti-send" aria-hidden="true"></i> Kirim laporan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     S4 — BUDGET LIST
+═══════════════════════════════ -->
+<div class="screen" id="s-blist">
+  <div class="tb purple">
+    <button class="tbb" onclick="go('s2')"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+    <h1>Pengajuan Anggaran</h1>
+    <button class="tbb" onclick="go('s-bnew')"><i class="ti ti-plus" aria-hidden="true"></i></button>
+  </div>
+  <div class="scroll-body">
+    <div class="stat2">
+      <div class="stat-c"><p>Total diajukan</p><strong>Rp 4,2 jt</strong></div>
+      <div class="stat-c"><p>Menunggu ACC</p><strong style="color:var(--amd)">Rp 1,8 jt</strong></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px">
+      <button style="padding:6px 13px;border-radius:20px;border:0.5px solid var(--p);background:var(--pl);color:var(--pd);font-size:12px;cursor:pointer;white-space:nowrap">Semua</button>
+      <button style="padding:6px 13px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:none;color:var(--color-text-secondary);font-size:12px;cursor:pointer;white-space:nowrap">Menunggu</button>
+      <button style="padding:6px 13px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:none;color:var(--color-text-secondary);font-size:12px;cursor:pointer;white-space:nowrap">Disetujui</button>
+      <button style="padding:6px 13px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:none;color:var(--color-text-secondary);font-size:12px;cursor:pointer;white-space:nowrap">Ditolak</button>
+    </div>
+    <div class="sec-title"><i class="ti ti-list" aria-hidden="true"></i> Riwayat pengajuan</div>
+    <div class="bcard" onclick="go('s-bdetail')">
+      <div class="bic"><i class="ti ti-bucket" style="color:var(--p)" aria-hidden="true"></i></div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Cat Epoxy & Thinner</p>
+        <p style="font-size:11px;color:var(--color-text-secondary)">Gedung Kantor Pusat · 6 Mei 2026</p>
+        <p style="font-size:12px;font-weight:500;color:var(--pd);margin-top:3px">Rp 1.800.000</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="bdg pend">Menunggu</span>
+        <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:14px" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="bcard" onclick="go('s-bdetail')">
+      <div class="bic"><i class="ti ti-package" style="color:var(--p)" aria-hidden="true"></i></div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Pasir & Semen</p>
+        <p style="font-size:11px;color:var(--color-text-secondary)">Epoxy Lantai Pabrik · 4 Mei 2026</p>
+        <p style="font-size:12px;font-weight:500;color:var(--gd);margin-top:3px">Rp 2.400.000</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="bdg ok">Disetujui</span>
+        <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:14px" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="bcard" onclick="go('s-bdetail')">
+      <div class="bic"><i class="ti ti-tools" style="color:var(--p)" aria-hidden="true"></i></div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Sewa Scaffolding</p>
+        <p style="font-size:11px;color:var(--color-text-secondary)">Renovasi Gudang · 2 Mei 2026</p>
+        <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-top:3px">Rp 950.000</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="bdg rej">Ditolak</span>
+        <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);font-size:14px" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div style="height:6px"></div>
+    <button class="btnp pu" onclick="go('s-bnew')"><i class="ti ti-plus" aria-hidden="true"></i> Buat pengajuan baru</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     S5 — BUDGET NEW
+═══════════════════════════════ -->
+<div class="screen" id="s-bnew">
+  <div class="tb purple">
+    <button class="tbb" onclick="go('s-blist')"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+    <h1>Pengajuan baru</h1>
+    <div style="width:28px"></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 16px">
+    <div class="sc">
+      <h4><i class="ti ti-info-circle" style="color:var(--p)" aria-hidden="true"></i> Informasi pengajuan</h4>
+      <div class="fs mb8"><label>Proyek</label><select><option>Gedung Kantor Pusat (ID-698)</option><option>Renovasi Gudang Bekasi (ID-412)</option><option>Epoxy Lantai Pabrik (ID-531)</option></select></div>
+      <div class="fs mb8"><label>Judul pengajuan</label><input type="text" placeholder="Contoh: Pembelian cat epoxy..."></div>
+      <div class="g2 mb8">
+        <div class="fs"><label>Kategori</label><select><option>Material</option><option>Alat</option><option>Jasa</option><option>Operasional</option></select></div>
+        <div class="fs"><label>Urgensi</label><select><option>Normal</option><option>Urgent</option><option>Sangat Urgent</option></select></div>
+      </div>
+      <div class="fs"><label>Tanggal dibutuhkan</label><input type="date" value="2026-05-10"></div>
+    </div>
+    <div class="sc">
+      <h4><i class="ti ti-list-numbers" style="color:var(--p)" aria-hidden="true"></i> Rincian item</h4>
+      <div class="row-i">
+        <div class="fs mb8"><label>Nama item</label><input type="text" value="Cat Epoxy 800 micron"></div>
+        <div class="g3 mb8">
+          <div class="fs"><label>Jumlah</label><input type="number" value="5"></div>
+          <div class="fs"><label>Satuan</label><select><option>kg</option><option>liter</option><option>sak</option><option>pcs</option></select></div>
+          <div class="fs"><label>Harga/sat</label><input type="number" value="280000"></div>
+        </div>
+        <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;display:flex;justify-content:space-between">
+          <span style="font-size:12px;color:var(--color-text-secondary)">Subtotal</span>
+          <span style="font-size:13px;font-weight:500;color:var(--pd)">Rp 1.400.000</span>
+        </div>
+      </div>
+      <div class="row-i">
+        <div class="fs mb8"><label>Nama item</label><input type="text" value="Thinner Epoxy"></div>
+        <div class="g3 mb8">
+          <div class="fs"><label>Jumlah</label><input type="number" value="2"></div>
+          <div class="fs"><label>Satuan</label><select><option>liter</option></select></div>
+          <div class="fs"><label>Harga/sat</label><input type="number" value="200000"></div>
+        </div>
+        <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;display:flex;justify-content:space-between">
+          <span style="font-size:12px;color:var(--color-text-secondary)">Subtotal</span>
+          <span style="font-size:13px;font-weight:500;color:var(--pd)">Rp 400.000</span>
+        </div>
+      </div>
+      <button class="btna pu"><i class="ti ti-plus" aria-hidden="true"></i> Tambah item</button>
+      <div style="background:var(--pl);border-radius:var(--border-radius-md);padding:11px 13px;display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:12px;color:var(--pd);font-weight:500">Total pengajuan</span>
+        <strong style="font-size:18px;font-weight:500;color:var(--pd)">Rp 1.800.000</strong>
+      </div>
+    </div>
+    <div class="sc">
+      <h4><i class="ti ti-note" style="color:var(--p)" aria-hidden="true"></i> Keterangan & lampiran</h4>
+      <div class="fs mb10"><label>Keterangan / alasan</label><textarea rows="3" placeholder="Jelaskan keperluan pengajuan..."></textarea></div>
+      <div style="border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:14px;text-align:center;cursor:pointer">
+        <i class="ti ti-paperclip" style="font-size:22px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin-top:5px">Upload penawaran / foto referensi</p>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">JPG, PNG, PDF — maks 5MB</p>
+      </div>
+    </div>
+  </div>
+  <div class="bbar">
+    <div class="brow">
+      <button class="bdraft" onclick="toast('Tersimpan sebagai draft ✓')"><i class="ti ti-device-floppy" aria-hidden="true"></i> Draft</button>
+      <button class="bsave pu" onclick="toast('Pengajuan berhasil dikirim! ✓')"><i class="ti ti-send" aria-hidden="true"></i> Kirim pengajuan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     S6 — BUDGET DETAIL
+═══════════════════════════════ -->
+<div class="screen" id="s-bdetail">
+  <div class="tb purple">
+    <button class="tbb" onclick="go('s-blist')"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+    <h1>Detail pengajuan</h1>
+    <div style="width:28px"></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 16px">
+    <div style="background:var(--pl);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><p style="font-size:15px;font-weight:500;color:var(--pd)">Cat Epoxy & Thinner</p><p style="font-size:11px;color:var(--p);margin-top:2px">Gedung Kantor Pusat · ID-698</p></div>
+        <span class="bdg pend">Menunggu</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12px">
+        <div><span style="color:var(--p)">Kategori:</span> <span style="color:var(--pd);font-weight:500">Material</span></div>
+        <div><span style="color:var(--p)">Urgensi:</span> <span style="color:var(--amd);font-weight:500">Normal</span></div>
+        <div><span style="color:var(--p)">Diajukan:</span> <span style="color:var(--pd);font-weight:500">6 Mei 2026</span></div>
+        <div><span style="color:var(--p)">Butuh:</span> <span style="color:var(--pd);font-weight:500">10 Mei 2026</span></div>
+      </div>
+    </div>
+    <div class="sc">
+      <h4><i class="ti ti-list-numbers" style="color:var(--p)" aria-hidden="true"></i> Rincian item</h4>
+      <div class="bi-detail">
+        <div style="flex:1"><p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Cat Epoxy 800 micron</p><p style="font-size:11px;color:var(--color-text-secondary)">5 kg × Rp 280.000</p></div>
+        <span style="font-size:14px;font-weight:500;color:var(--pd)">Rp 1.400.000</span>
+      </div>
+      <div class="bi-detail">
+        <div style="flex:1"><p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Thinner Epoxy</p><p style="font-size:11px;color:var(--color-text-secondary)">2 liter × Rp 200.000</p></div>
+        <span style="font-size:14px;font-weight:500;color:var(--pd)">Rp 400.000</span>
+      </div>
+      <div style="background:var(--pl);border-radius:var(--border-radius-md);padding:10px 12px;display:flex;justify-content:space-between;margin-top:10px">
+        <span style="font-size:12px;color:var(--pd);font-weight:500">Total</span>
+        <strong style="font-size:16px;font-weight:500;color:var(--pd)">Rp 1.800.000</strong>
+      </div>
+    </div>
+    <div class="sc">
+      <h4><i class="ti ti-timeline" style="color:var(--p)" aria-hidden="true"></i> Status persetujuan</h4>
+      <div class="timeline-step">
+        <div class="tl-dot" style="background:var(--gg)"><i class="ti ti-check" style="font-size:13px;color:var(--ggd)" aria-hidden="true"></i></div>
+        <div><p style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Dikirim oleh IRFAN</p><p style="font-size:11px;color:var(--color-text-secondary)">6 Mei 2026, 08:42</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="tl-dot" style="background:var(--aml)"><i class="ti ti-clock" style="font-size:13px;color:var(--amd)" aria-hidden="true"></i></div>
+        <div><p style="font-size:13px;font-weight:500;color:var(--color-text-secondary)">Menunggu persetujuan PM</p><p style="font-size:11px;color:var(--color-text-tertiary)">Belum diproses</p></div>
+      </div>
+      <div class="timeline-step" style="opacity:.35;border:none">
+        <div class="tl-dot" style="background:var(--color-background-secondary)"><i class="ti ti-coin" style="font-size:13px;color:var(--color-text-tertiary)" aria-hidden="true"></i></div>
+        <div><p style="font-size:13px;color:var(--color-text-secondary)">Pencairan dana</p><p style="font-size:11px;color:var(--color-text-tertiary)">Menunggu persetujuan</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="bbar">
+    <div class="brow">
+      <button class="bdraft" style="flex:1" onclick="toast('Pengajuan dibatalkan')"><i class="ti ti-x" aria-hidden="true"></i> Batalkan</button>
+      <button class="bsave pu" onclick="go('s-bnew')"><i class="ti ti-edit" aria-hidden="true"></i> Edit</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var pkTotal=0,catMap={epoxy:0,beton:0,finishing:0,alat:0};
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function login(){var u=(document.getElementById('uname').value||'LEADER').toUpperCase();document.getElementById('udisp').textContent=u;document.getElementById('r-by').textContent=u;var av=document.getElementById('uavatar');av.textContent=u.substring(0,2);go('s2')}
+function openReport(name,pid){document.getElementById('r-title').textContent=name.length>22?name.substring(0,20)+'…':name;document.getElementById('r-pid').textContent='#'+pid;go('s3')}
+function tab(id,btn){document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.segb').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');btn.classList.add('on')}
+function modeSwitch(m){var isPk=m==='pk';document.getElementById('pk-mode').style.display=isPk?'':'none';document.getElementById('man-mode').style.display=isPk?'none':'';document.getElementById('mb-pk').classList.toggle('on',isPk);document.getElementById('mb-man').classList.toggle('on',!isPk)}
+function ck(el){
+  var row=el.closest('.pk-item'),cat=row.dataset.cat;
+  var qw=row.querySelector('.qty-wrap'),on=el.classList.contains('on');
+  el.classList.toggle('on',!on);qw.classList.toggle('on',!on);
+  if(!on){pkTotal++;catMap[cat]=(catMap[cat]||0)+1}else{pkTotal=Math.max(0,pkTotal-1);catMap[cat]=Math.max(0,(catMap[cat]||1)-1)}
+  document.getElementById('pk-cnt').textContent=pkTotal+' item';
+  var em=document.getElementById('c'+cat.charAt(0)+'-cnt');if(em)em.textContent=catMap[cat]>0?catMap[cat]+' dipilih':'0 dipilih';
+}
+function qa(btn,d){var inp=btn.parentElement.querySelector('.qinp');inp.value=Math.max(1,parseInt(inp.value||1)+d)}
+function toggleCat(id){var el=document.getElementById(id);var key=id.replace('pk','c').replace('e','e').replace('b','b').replace('f','f').replace('a','a');var ico=document.getElementById(id.replace('pk','c')+'-ico');var h=el.style.display==='none';el.style.display=h?'':'none';if(ico)ico.style.transform=h?'':'rotate(-90deg)'}
+function pkFilter(f,btn){document.querySelectorAll('.pk-pill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.pk-item').forEach(r=>{if(f==='all')r.style.display='';else if(f==='sel')r.style.display=r.querySelector('.chk').classList.contains('on')?'':'none';else r.style.display=r.dataset.cat===f?'':'none'})}
+function pkSearch(q){var l=q.toLowerCase();document.querySelectorAll('.pk-item').forEach(r=>{r.style.display=(r.dataset.name||'').toLowerCase().includes(l)?'':'none'})}
+function loadRepeat(){var items=document.querySelectorAll('.pk-item'),idx=[0,1,2,5,6,10,11],qty=[5,3,2,10,4,6,8];idx.forEach((i,j)=>{var r=items[i];if(!r)return;var c=r.querySelector('.chk');if(!c.classList.contains('on')){c.classList.add('on');r.querySelector('.qty-wrap').classList.add('on');r.querySelector('.qinp').value=qty[j];pkTotal++;var cat=r.dataset.cat;catMap[cat]=(catMap[cat]||0)+1;var em=document.getElementById('c'+cat.charAt(0)+'-cnt');if(em)em.textContent=catMap[cat]+' dipilih'}});document.getElementById('pk-cnt').textContent=pkTotal+' item';toast('7 item dari pengajuan terakhir dimuat ✓')}
+function tog(btn,type){var row=btn.closest('.htog');row.querySelectorAll('.htb').forEach(b=>{b.classList.remove('h','a','s')});btn.classList.add(type)}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500)}
+</script>

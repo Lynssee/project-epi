@@ -1,0 +1,276 @@
+https://directus.eltamaprimaindo.com/items/projects
+{
+  "data": {
+    "id": 700,
+    "status": "waiting",
+    "user_created": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+    "date_created": "2026-05-06T08:48:56.335Z",
+    "user_updated": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+    "date_updated": "2026-05-07T03:01:55.280Z",
+    "name": "PT. BAKERINDO SUKSES MAKMUR - PO/EPI/0040526/487",
+    "description": "Mobilisasi Material & Manpower, Jasa Pekerjaan Aplikasi Perbaikan Lantai, Garis Line",
+    "lokasi": "-",
+    "nomor_po": "06/BSM/PO/IV/2026",
+    "start_date": "2026-04-30",
+    "end_date": "2026-05-30",
+    "jenis_project": "Epoxy / Floor Coating",
+    "leader": "RIDHO AKBAR SAGRADI",
+    "sales": "MEKY MF WARBUNG",
+    "target_progress": "13.8",
+    "total_progress": "0",
+    "customer": [
+      {
+        "name": "PT. BAKERINDO SUKSES MAKMUR",
+        "contact": ""
+      }
+    ],
+    "packing_list": null,
+    "progress_details": [
+      {
+        "description": "Mobilisasi Material & Manpower, Jasa Pekerjaan Aplikasi Perbaikan Lantai",
+        "jumlah_pcs": 1,
+        "qty_unit": 1,
+        "target_value": 1,
+        "satuan_progress": "lot"
+      },
+      {
+        "description": "Garis Line",
+        "jumlah_pcs": 1,
+        "qty_unit": 12.8,
+        "target_value": 12.8,
+        "satuan_progress": "m²"
+      }
+    ],
+    "so_customer_id": 486,
+    "retensi_percentage": 5,
+    "timeline_planning": {
+      "activities": [
+        {
+          "id": "activity_1102",
+          "so_detail_id": 1102,
+          "activity_name": "Mobilisasi Material & Manpower, Jasa Pekerjaan Aplikasi Perbaikan Lantai",
+          "activity_type": "jasa",
+          "planned_start_date": "2026-05-11",
+          "planned_end_date": "2026-05-13",
+          "planned_duration_days": 3,
+          "daily_quantities": {
+            "2026-05-11": 1,
+            "2026-05-12": 150,
+            "2026-05-13": 150
+          },
+          "total_planned_qty": 301,
+          "notes": "",
+          "created_at": "2026-05-07T03:01:53.122Z",
+          "updated_at": "2026-05-07T03:01:53.122Z"
+        },
+        {
+          "id": "activity_1103",
+          "so_detail_id": 1103,
+          "activity_name": "Garis Line",
+          "activity_type": "jasa",
+          "planned_start_date": "2026-05-14",
+          "planned_end_date": "2026-05-14",
+          "planned_duration_days": 1,
+          "daily_quantities": {
+            "2026-05-14": 12.8
+          },
+          "total_planned_qty": 12.8,
+          "notes": "",
+          "created_at": "2026-05-07T03:01:53.122Z",
+          "updated_at": "2026-05-07T03:01:53.122Z"
+        }
+      ],
+      "metadata": {
+        "last_updated_at": "2026-05-07T03:01:53.122Z",
+        "version": 1
+      }
+    }
+  }
+}
+
+https://directus.eltamaprimaindo.com/items/reports
+{
+  "data": {
+    "id": 2736,
+    "user_created": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+    "date_created": "2026-05-06T06:41:26.330Z",
+    "user_updated": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+    "date_updated": "2026-05-06T07:32:55.082Z",
+    "project_id": 698,
+    "date": "2026-05-06T00:00:00",
+    "prepared_by": "IRFAN",
+    "schedule": [
+      {
+        "activity": "",
+        "start_time": "10:00",
+        "end_time": "15:00",
+        "status": "complete"
+      }
+    ],
+    "progress": [
+      {
+        "activity": "",
+        "progress_value": 120,
+        "unit": "m²",
+        "notes": "",
+        "category": "Jasa pengecatan lantai epoxy 800 micron (Foxapaint)"
+      }
+    ],
+    "material_used": [
+      {
+        "type": "",
+        "amount": "",
+        "unit": "kg",
+        "notes": ""
+      }
+    ],
+    "material_stock": [
+      {
+        "type": "",
+        "amount": "",
+        "unit": "kg"
+      }
+    ],
+    "tools": [],
+    "material_needs": [
+      {
+        "type": "",
+        "amount": "",
+        "unit": "kg",
+        "notes": "",
+        "urgency": "normal",
+        "description": "Pasir",
+        "date_needed": "2026-05-09"
+      }
+    ],
+    "tomorrow_plan": [
+      {
+        "activity": "",
+        "notes": "",
+        "description": "Finisihing"
+      }
+    ],
+    "issues": [
+      {
+        "description": "Hujan"
+      }
+    ],
+    "manpower": [
+      {
+        "role": "",
+        "count": "",
+        "notes": ""
+      }
+    ],
+    "budget_notes": "",
+    "budget_items": [],
+    "nama_manpower": null,
+    "Kehadiran_reports": [
+      {
+        "id": "temp-1778052517772",
+        "role": "BORONGAN",
+        "nama": "ABDUL AZIZ",
+        "kehadiran": "hadir",
+        "keterangan": "",
+        "suratSakit": null,
+        "dokumentasi": "e5c4e1e1-b120-46bd-8276-8efe97915572"
+      }
+    ],
+    "budget_receipt": null
+  }
+}
+
+https://directus.eltamaprimaindo.com/items/pengajuan_anggaran
+{
+      "id": 67,
+      "status": "Verified ProjFinance",
+      "user_created": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+      "date_created": "2026-05-05T09:07:30.143Z",
+      "user_updated": "8fa828bb-bb71-4571-8f43-25dcf5b9b996",
+      "date_updated": "2026-05-06T01:31:33.691Z",
+      "nomor_pengajuan": "PA-2605-0002",
+      "nama_pengaju": "Taufik Eltama",
+      "department": "Project",
+      "kategori": "jasa",
+      "urgency": "Urgent",
+      "tujuan_pengajuan": "Gaji Manpower",
+      "tanggal_dibutuhkan": "2026-05-05T00:00:00",
+      "payment_method": "Transfer",
+      "total_amount": 10000000,
+      "comments": "",
+      "approval_path": [
+        {
+          "stage": "project_finance",
+          "label": "Project Finance",
+          "included": true
+        },
+        {
+          "stage": "manager_project",
+          "label": "Manajer Proyek",
+          "included": true
+        },
+        {
+          "stage": "finance",
+          "label": "Finance",
+          "included": true
+        }
+      ],
+      "department_manager_approved": null,
+      "department_manager_rejected": null,
+      "procurement_approved": null,
+      "procurement_rejected": null,
+      "finance_approved": false,
+      "finance_rejected": false,
+      "hrd_approved": null,
+      "hrd_rejected": null,
+      "direktur_approved": null,
+      "direktur_rejected": null,
+      "general_manager_approved": null,
+      "general_manager_rejected": null,
+      "plant_manager_approved": null,
+      "plant_manager_rejected": null,
+      "reject_reason": null,
+      "rejected_stage": null,
+      "approval_notes": "Disetujui oleh project_finance",
+      "finance_processed": false,
+      "finance_processed_date": null,
+      "revision_notes": null,
+      "revision_count": 1,
+      "revision_requested": false,
+      "verified_by": null,
+      "verified_date": null,
+      "admin_project_approved": null,
+      "admin_project_rejected": null,
+      "admin_project_signature": null,
+      "admin_project_approved_by": null,
+      "admin_project_approved_date": null,
+      "project_finance_approved": true,
+      "project_finance_rejected": false,
+      "project_finance_signature": "04558075-0646-45d5-befa-d8b658a225a8",
+      "project_finance_approved_by": "desi@eltamaprimaindo.com",
+      "project_finance_approved_date": "2026-05-06T01:31:33",
+      "manager_project_approved": false,
+      "manager_project_rejected": false,
+      "manager_project_signature": null,
+      "manager_project_approved_by": null,
+      "manager_project_approved_date": null,
+      "finance_signature": null,
+      "finance_approved_by": null,
+      "finance_approved_date": null,
+      "approval_attachments": {
+        "project_finance": []
+      },
+      "revision_stage": null,
+      "project_id": 697,
+      "penerima_dana_type": "pt",
+      "penerima_dana_nama": "ASEP",
+      "bank_name": "BCA",
+      "bank_account_number": "123456",
+      "bank_account_name": "ASEP",
+      "jumlah_disetujui": null,
+      "tanggal_dicairkan": null,
+      "created_by_email": null,
+      "lampiran": [],
+      "bukti_pembayaran": []
+}
+
