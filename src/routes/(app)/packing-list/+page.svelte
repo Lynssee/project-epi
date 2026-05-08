@@ -181,7 +181,7 @@
 		return grouped;
 	});
 
-	let requestProjectIds = $derived(Object.keys(requestsByProject).map(Number));
+	let requestProjectIds = $derived(Object.keys(requestsByProject()).map(Number));
 </script>
 
 <div class="flex-1 flex flex-col h-full overflow-hidden">
