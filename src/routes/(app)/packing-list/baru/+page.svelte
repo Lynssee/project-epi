@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import {
 		IconArrowLeft, IconPackage, IconInfoCircle, IconPlus, IconCheck,
-		IconLoader2, IconSend, IconTrash, IconListNumbers, IconSearch, IconNewSection
+		IconLoader2, IconSend, IconTrash, IconListNumbers, IconSearch, IconNewSection, IconTemplate
 	} from '@tabler/icons-svelte';
 	import { onMount } from 'svelte';
 	import { authStore, isLeaderRole } from '$lib/stores/auth';
@@ -10,6 +10,7 @@
 	import {
 		getProjectBudgetItems, submitPackingRequest, createPackingListItems
 	} from '$lib/services/packingList';
+	import TemplateSelector from '$lib/components/packing-list/TemplateSelector.svelte';
 
 	let projects = $state<any[]>([]);
 	let selectedProject = $state('');
@@ -54,7 +55,6 @@
 	let totalExistingSelected = $derived(selectedExisting.size);
 	let totalNewItems = $derived(newItems.filter(i => i.material_name.trim()).length);
 	let totalItems = $derived(totalExistingSelected + totalNewItems);
-	let totalNewAmount = $derived(newItems.reduce((acc, i) => acc + (i.qty * i.unit_price), 0));
 
 	onMount(async () => {
 		try {
@@ -191,6 +191,22 @@
 				</div>
 			</div>
 
+			<!-- ====== SECTION 0: Load dari Template ====== -->
+			<div class="card-section">
+				<h4><IconTemplate size={16} class="text-[var(--g)]" /> Load dari Template</h4>
+				<p class="text-[11px] text-gray-400 -mt-1 mb-3">Muat item dari template yang sudah ada.</p>
+
+				{#if selectedProject}
+					<TemplateSelector
+						projectId={Number(selectedProject)}
+					/>
+				{:else}
+					<div class="text-center py-4 text-gray-400 text-[12px] bg-gray-50 rounded-lg">
+						Pilih project terlebih dahulu untuk memuat template.
+					</div>
+				{/if}
+			</div>
+
 			<!-- ====== SECTION 1: Barang yang sudah ada di RAB ====== -->
 			<div class="card-section">
 				<h4><IconPackage size={16} class="text-[var(--g)]" /> Pilih dari RAB yang ada</h4>
@@ -293,7 +309,7 @@
 							<input type="text" class="f-input" bind:value={item.material_color} placeholder="Contoh: OX-101 GREY" />
 						</div>
 
-						<div class="grid grid-cols-3 gap-2 mb-2">
+						<div class="grid grid-cols-2 gap-2 mb-2">
 							<div>
 								<label class="f-label">Qty</label>
 								<input type="number" class="f-input" bind:value={item.qty} min="0.1" step="0.1" />
@@ -306,15 +322,6 @@
 									{/each}
 								</select>
 							</div>
-							<div>
-								<label class="f-label">Harga/sat</label>
-								<input type="number" class="f-input" bind:value={item.unit_price} min="0" step="1000" />
-							</div>
-						</div>
-
-						<div class="bg-white rounded-lg p-2.5 flex justify-between items-center border border-gray-100">
-							<span class="text-[12px] text-gray-400">Subtotal</span>
-							<span class="text-[13px] font-semibold text-[var(--gd)]">{formatCurrency(item.qty * item.unit_price)}</span>
 						</div>
 					</div>
 				{/each}
@@ -326,7 +333,7 @@
 				{#if newItems.length > 0 && totalNewItems > 0}
 					<div class="bg-[var(--gl)] rounded-lg p-2.5 mt-2 flex justify-between items-center">
 						<span class="text-[11px] text-[var(--gd)] font-medium">Total barang baru</span>
-						<span class="text-[13px] font-semibold text-[var(--gd)]">{totalNewItems} item · {formatCurrency(totalNewAmount)}</span>
+						<span class="text-[13px] font-semibold text-[var(--gd)]">{totalNewItems} item</span>
 					</div>
 				{/if}
 			</div>
