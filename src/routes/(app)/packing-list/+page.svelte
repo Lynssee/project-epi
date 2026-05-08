@@ -280,28 +280,23 @@
 
 						<!-- Accordion Content -->
 						{#if isExpanded}
-							<div class="mx-1 mb-3 space-y-2">
-								{#each items as item}
-									<div class="border border-gray-100 rounded-xl p-3 bg-gray-50/50">
-										<div class="flex items-start gap-2.5">
-											<div class="w-8 h-8 rounded-lg bg-[var(--gl)] flex items-center justify-center shrink-0 mt-0.5">
-												<IconPackage size={16} class="text-[var(--g)]" />
-											</div>
-											<div class="flex-1 min-w-0">
-												<p class="text-[13px] font-medium text-gray-800">
-													{item.material_name || item.description || 'Material'}
-												</p>
-												<p class="text-[11px] text-gray-400 mt-0.5">
-													{item.qty || 0} {item.unit || ''}
-													{#if item.material_color}
-														· {item.material_color}
-													{/if}
-												</p>
-											</div>
-											<span class="badge {getStatusClass(item.packing_status)} shrink-0">
-												{getStatusLabel(item.packing_status)}
-											</span>
+							<div class="mx-1 mb-3 bg-gray-50/50 rounded-lg border border-gray-100">
+								{#each items as item, idx}
+									<div class="flex items-center gap-2 px-3 py-2 {idx !== items.length - 1 ? 'border-b border-gray-100' : ''}">
+										<div class="flex-1 min-w-0">
+											<p class="text-[12px] font-medium text-gray-800">
+												{item.material_name || item.description || 'Material'}
+											</p>
+											<p class="text-[10px] text-gray-400">
+												{item.qty || 0} {item.unit || ''}
+												{#if item.material_color}
+													· {item.material_color}
+												{/if}
+											</p>
 										</div>
+										<span class="badge {getStatusClass(item.packing_status)} shrink-0 !text-[10px] !px-2 !py-0.5">
+											{getStatusLabel(item.packing_status)}
+										</span>
 									</div>
 								{/each}
 							</div>
