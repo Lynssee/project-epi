@@ -24,6 +24,9 @@
 	let expandedProject = $state<number | null>(null);
 	let projectNames = $state<Record<number, string>>({});
 
+	// Pengajuan accordion
+	let expandedPengajuanProject = $state<number | null>(null);
+
 	// Material usage edit
 	let editingItem = $state<number | null>(null);
 	let editQtyUsed = $state(0);
@@ -115,6 +118,10 @@
 		expandedProject = expandedProject === pid ? null : pid;
 	}
 
+	function togglePengajuanProject(pid: number) {
+		expandedPengajuanProject = expandedPengajuanProject === pid ? null : pid;
+	}
+
 	function formatCurrency(val: number) {
 		return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
 	}
@@ -162,6 +169,19 @@
 
 	// Count inventory projects
 	let inventoryProjectIds = $derived(Object.keys(inventoryByProject).map(Number));
+
+	// Group pengajuan requests by project
+	let requestsByProject = $derived(() => {
+		const grouped: Record<number, any[]> = {};
+		for (const item of filteredRequests) {
+			const pid = item.project_id;
+			if (!grouped[pid]) grouped[pid] = [];
+			grouped[pid].push(item);
+		}
+		return grouped;
+	});
+
+	let requestProjectIds = $derived(Object.keys(requestsByProject).map(Number));
 </script>
 
 <div class="flex-1 flex flex-col h-full overflow-hidden">
@@ -222,24 +242,70 @@
 				{#if filteredRequests.length === 0}
 					<div class="text-center py-8 text-gray-400 text-[13px]">Tidak ada data pengajuan packing.</div>
 				{:else}
-					{#each filteredRequests as item}
-						<div class="border border-gray-100 rounded-xl p-3 mb-2 bg-white">
-							<div class="flex items-center gap-3">
+					{#each requestProjectIds as pid}
+						{@const items = requestsByProject()[pid] || []}
+						{@const totalItems = items.length}
+						{@const statusCounts = items.reduce((acc: Record<string, number>, i: any) => {
+							acc[i.packing_status] = (acc[i.packing_status] || 0) + 1;
+							return acc;
+						}, {} as Record<string, number>)}
+						{@const isExpanded = expandedPengajuanProject === pid}
+
+						<button
+							class="w-full border rounded-xl mb-2 bg-white overflow-hidden transition-all cursor-pointer text-left
+								{isExpanded ? 'border-[var(--g)]/30 shadow-sm' : 'border-gray-100 hover:border-gray-200'}"
+							onclick={() => togglePengajuanProject(pid)}
+						>
+							<!-- Accordion Header -->
+							<div class="flex items-center gap-3 p-3.5">
 								<div class="w-10 h-10 rounded-xl bg-[var(--gl)] flex items-center justify-center shrink-0">
 									<IconPackage size={20} class="text-[var(--g)]" />
 								</div>
 								<div class="flex-1 min-w-0">
-									<p class="text-[13px] font-medium text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">{item.material_name || item.description || 'Material'}</p>
-									<p class="text-[11px] text-gray-400 mt-0.5">
-										{item.qty || 0} {item.unit || ''} · {formatCurrency(item.unit_price || 0)}/sat
+									<p class="text-[13px] font-medium text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
+										{projectNames[pid] || `Proyek ID-${pid}`}
 									</p>
 									<p class="text-[11px] text-gray-400 mt-0.5">
-										Proyek: {projectNames[item.project_id] || `ID-${item.project_id}`}
+										{totalItems} item
+										{#if statusCounts.requested}
+											· {statusCounts.requested} diajukan
+										{/if}
 									</p>
 								</div>
-								<span class="badge {getStatusClass(item.packing_status)}">{getStatusLabel(item.packing_status)}</span>
+								<div class="transition-transform duration-200 {isExpanded ? 'rotate-180' : ''}">
+									<IconChevronDown size={18} class="text-gray-400" />
+								</div>
 							</div>
-						</div>
+						</button>
+
+						<!-- Accordion Content -->
+						{#if isExpanded}
+							<div class="mx-1 mb-3 space-y-2">
+								{#each items as item}
+									<div class="border border-gray-100 rounded-xl p-3 bg-gray-50/50">
+										<div class="flex items-start gap-2.5">
+											<div class="w-8 h-8 rounded-lg bg-[var(--gl)] flex items-center justify-center shrink-0 mt-0.5">
+												<IconPackage size={16} class="text-[var(--g)]" />
+											</div>
+											<div class="flex-1 min-w-0">
+												<p class="text-[13px] font-medium text-gray-800">
+													{item.material_name || item.description || 'Material'}
+												</p>
+												<p class="text-[11px] text-gray-400 mt-0.5">
+													{item.qty || 0} {item.unit || ''}
+													{#if item.material_color}
+														· {item.material_color}
+													{/if}
+												</p>
+											</div>
+											<span class="badge {getStatusClass(item.packing_status)} shrink-0">
+												{getStatusLabel(item.packing_status)}
+											</span>
+										</div>
+									</div>
+								{/each}
+							</div>
+						{/if}
 					{/each}
 				{/if}
 
