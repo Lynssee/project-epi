@@ -40,6 +40,9 @@
 		tomorrow_plan: [{ activity: '', notes: '', description: '' }],
 		issues: [{ description: '' }],
 		manpower: [{ role: 'BORONGAN', count: 0, notes: '' }],
+		attendance_photos: [] as { file: File; name: string; url: string }[],
+		progress_photos: [] as { file: File; name: string; url: string }[],
+		issue_photos: [] as { file: File; name: string; url: string }[],
 		tools: [{ name: '', amount: 0 }],
 		budget_notes: ''
 	});
@@ -114,6 +117,39 @@
 	}
 	function addTool() {
 		reportData.tools = [...reportData.tools, { name: '', amount: 0 }];
+	}
+	function handleAttendancePhoto(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if (target.files && target.files.length > 0) {
+			const file = target.files[0];
+			const url = URL.createObjectURL(file);
+			reportData.attendance_photos = [...reportData.attendance_photos, { file, name: file.name, url }];
+		}
+	}
+	function removeAttendancePhoto(index: number) {
+		reportData.attendance_photos = reportData.attendance_photos.filter((_, i) => i !== index);
+	}
+	function handleProgressPhoto(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if (target.files && target.files.length > 0) {
+			const file = target.files[0];
+			const url = URL.createObjectURL(file);
+			reportData.progress_photos = [...reportData.progress_photos, { file, name: file.name, url }];
+		}
+	}
+	function removeProgressPhoto(index: number) {
+		reportData.progress_photos = reportData.progress_photos.filter((_, i) => i !== index);
+	}
+	function handleIssuePhoto(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if (target.files && target.files.length > 0) {
+			const file = target.files[0];
+			const url = URL.createObjectURL(file);
+			reportData.issue_photos = [...reportData.issue_photos, { file, name: file.name, url }];
+		}
+	}
+	function removeIssuePhoto(index: number) {
+		reportData.issue_photos = reportData.issue_photos.filter((_, i) => i !== index);
 	}
 </script>
 
@@ -205,6 +241,30 @@
 					{/each}
 					<button class="btn-action" onclick={addProgress}><IconPlus size={14} /> Tambah progress</button>
 				</div>
+
+				<!-- Dokumentasi Progress -->
+				<div class="card-section mt-4">
+					<h4><IconCamera size={16} class="text-[var(--g)]" /> Foto Bukti Progress</h4>
+					
+					{#if reportData.progress_photos.length > 0}
+						<div class="grid grid-cols-2 gap-2 mb-3">
+							{#each reportData.progress_photos as photo, idx}
+								<div class="relative aspect-square border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+									<img src={photo.url} alt="Progress" class="w-full h-full object-cover" />
+									<button class="absolute top-1.5 right-1.5 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors" onclick={() => removeProgressPhoto(idx)}>
+										<IconTrash size={14} />
+									</button>
+								</div>
+							{/each}
+						</div>
+					{/if}
+
+					<div class="mt-2 border border-dashed border-[var(--g)] bg-[var(--gl)]/30 rounded-xl p-4 text-center cursor-pointer hover:bg-[var(--gl)] transition-colors relative">
+						<input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange={handleProgressPhoto} />
+						<IconCamera size={24} class="text-[var(--g)] mx-auto" />
+						<p class="text-[12px] text-[var(--gd)] mt-1.5 font-medium">Tap untuk memotret progress pekerjaan</p>
+					</div>
+				</div>
 			{/if}
 
 			{#if activeTab === 'material'}
@@ -275,6 +335,30 @@
 					{/each}
 					<button class="btn-action" onclick={addManpower}><IconPlus size={14} /> Tambah role</button>
 				</div>
+
+				<!-- Dokumentasi Absensi -->
+				<div class="card-section mt-4">
+					<h4><IconCamera size={16} class="text-[var(--g)]" /> Foto Bukti Absensi</h4>
+					
+					{#if reportData.attendance_photos.length > 0}
+						<div class="grid grid-cols-2 gap-2 mb-3">
+							{#each reportData.attendance_photos as photo, idx}
+								<div class="relative aspect-square border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+									<img src={photo.url} alt="Absensi" class="w-full h-full object-cover" />
+									<button class="absolute top-1.5 right-1.5 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors" onclick={() => removeAttendancePhoto(idx)}>
+										<IconTrash size={14} />
+									</button>
+								</div>
+							{/each}
+						</div>
+					{/if}
+
+					<div class="mt-2 border border-dashed border-[var(--g)] bg-[var(--gl)]/30 rounded-xl p-4 text-center cursor-pointer hover:bg-[var(--gl)] transition-colors relative">
+						<input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange={handleAttendancePhoto} />
+						<IconCamera size={24} class="text-[var(--g)] mx-auto" />
+						<p class="text-[12px] text-[var(--gd)] mt-1.5 font-medium">Tap untuk memotret atau pilih foto</p>
+					</div>
+				</div>
 			{/if}
 
 			{#if activeTab === 'lainnya'}
@@ -284,7 +368,30 @@
 					{#each reportData.issues as item, i}
 						<div class="mb-3"><label class="f-label">Deskripsi</label><textarea bind:value={item.description} rows="3" class="f-textarea" placeholder="Tulis kendala..."></textarea></div>
 					{/each}
-					<button class="btn-action" onclick={addIssue}><IconPlus size={14} /> Tambah kendala</button>
+					<button class="btn-action mb-4" onclick={addIssue}><IconPlus size={14} /> Tambah kendala</button>
+
+					<div class="mt-2 border-t border-gray-100 pt-4">
+						<h5 class="text-[12px] font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><IconCamera size={14} class="text-gray-400" /> Foto Bukti Kendala</h5>
+						
+						{#if reportData.issue_photos.length > 0}
+							<div class="grid grid-cols-2 gap-2 mb-3">
+								{#each reportData.issue_photos as photo, idx}
+									<div class="relative aspect-square border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+										<img src={photo.url} alt="Kendala" class="w-full h-full object-cover" />
+										<button class="absolute top-1.5 right-1.5 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors" onclick={() => removeIssuePhoto(idx)}>
+											<IconTrash size={14} />
+										</button>
+									</div>
+								{/each}
+							</div>
+						{/if}
+
+						<div class="border border-dashed border-[var(--re)] bg-[var(--rel)]/30 rounded-xl p-4 text-center cursor-pointer hover:bg-[var(--rel)] transition-colors relative">
+							<input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange={handleIssuePhoto} />
+							<IconCamera size={24} class="text-[var(--re)] mx-auto" />
+							<p class="text-[12px] text-[var(--red)] mt-1.5 font-medium">Tap untuk memotret bukti kendala</p>
+						</div>
+					</div>
 				</div>
 
 				<!-- Peralatan -->

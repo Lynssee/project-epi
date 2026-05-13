@@ -42,25 +42,20 @@
 
 	onMount(async () => {
 		try {
-			// Fetch projects
-			let projResult: any[];
-			if (isLeaderRole(currentRoleId) && currentKaryawanName) {
-				projResult = await getProjects(currentKaryawanName);
-			} else {
-				projResult = await getProjects();
-			}
+			// Fetch projects, packing requests, and inventory concurrently
+			const [projResult, requests, allInventory] = await Promise.all([
+				(isLeaderRole(currentRoleId) && currentKaryawanName) ? getProjects(currentKaryawanName) : getProjects(),
+				getPackingRequests(),
+				getAllProjectsInventory()
+			]);
+
 			projects = projResult || [];
 			for (const p of projects) {
 				projectNames[p.id] = p.name;
 			}
 
-			// Fetch packing requests (from project_budgets with packing_status != null)
-			const requests = await getPackingRequests();
 			packingRequests = requests || [];
 			applyFilter('semua');
-
-			// Fetch all inventory (from project_expenses, type supplier)
-			const allInventory = await getAllProjectsInventory();
 			const grouped: Record<number, any[]> = {};
 			for (const item of allInventory) {
 				const pid = item.project_id;

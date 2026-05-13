@@ -32,9 +32,9 @@
 			}
 			projects = result || [];
 
-			// Check today's reports per project (fetch terpisah)
+			// Check today's reports per project concurrently
 			const today = new Date().toISOString().split('T')[0];
-			for (const p of projects) {
+			await Promise.all(projects.map(async (p) => {
 				try {
 					const reports = await getReports(p.id);
 					const hasToday = (reports || []).some((r: any) => {
@@ -45,7 +45,7 @@
 				} catch {
 					todayReports[p.id] = false;
 				}
-			}
+			}));
 		} catch (e) {
 			console.error('Gagal memuat proyek:', e);
 		} finally {

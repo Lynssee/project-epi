@@ -19,24 +19,20 @@
 			let karyawanName: string | null = null;
 
 			if (user) {
-				// Fetch role from Firestore (terpisah)
-				try {
-					const firestoreUser = await getAppUserById(user.uid);
-					if (firestoreUser) {
-						role = firestoreUser.role;
-						roleId = firestoreUser.roleId || firestoreUser.role;
-					}
-				} catch { /* ignore */ }
+				// Fetch role from Firestore and karyawan name from Directus concurrently
+				const [firestoreUserResult, karyawanResult] = await Promise.allSettled([
+					getAppUserById(user.uid),
+					user.email ? getKaryawanByEmail(user.email) : Promise.resolve(null)
+				]);
 
-				// Fetch karyawan name from Directus (terpisah)
-				try {
-					if (user.email) {
-						const karyawan = await getKaryawanByEmail(user.email);
-						if (karyawan) {
-							karyawanName = karyawan.nama_karyawan;
-						}
-					}
-				} catch { /* ignore */ }
+				if (firestoreUserResult.status === 'fulfilled' && firestoreUserResult.value) {
+					role = firestoreUserResult.value.role;
+					roleId = firestoreUserResult.value.roleId || firestoreUserResult.value.role;
+				}
+
+				if (karyawanResult.status === 'fulfilled' && karyawanResult.value) {
+					karyawanName = karyawanResult.value.nama_karyawan;
+				}
 			}
 
 			authStore.set({

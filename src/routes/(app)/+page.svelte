@@ -48,21 +48,18 @@
 		userRoleLabel = currentRoleId ? (currentRoleId === 'super_admin' ? 'Super Admin' : currentRoleId === 'leader' ? 'Leader' : currentRoleId) : '';
 
 		try {
-			// For leader role: filter projects by karyawan name
-			let projResult: any[];
-			if (isLeaderRole(currentRoleId) && currentKaryawanName) {
-				projResult = await getProjects(currentKaryawanName);
-			} else {
-				projResult = await getProjects();
-			}
-			projects = projResult || [];
+			// Fetch projects and budgets concurrently
+			const [projResult, budgResult] = await Promise.all([
+				(isLeaderRole(currentRoleId) && currentKaryawanName) ? getProjects(currentKaryawanName) : getProjects(),
+				getPengajuanAnggaran(3)
+			]);
 
-			const budgResult = await getPengajuanAnggaran(3);
+			projects = projResult || [];
 			budgets = budgResult || [];
 
-			// Check today's reports per project (fetch terpisah)
+			// Check today's reports per project concurrently
 			const today = new Date().toISOString().split('T')[0];
-			for (const p of projects) {
+			await Promise.all(projects.map(async (p) => {
 				try {
 					const reports = await getReports(p.id);
 					const hasToday = (reports || []).some((r: any) => {
@@ -73,7 +70,7 @@
 				} catch {
 					todayReports[p.id] = false;
 				}
-			}
+			}));
 		} catch (error) {
 			console.error('Gagal memuat data:', error);
 		}
