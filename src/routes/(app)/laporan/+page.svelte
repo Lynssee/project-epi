@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { getProjects } from '$lib/services/projects';
-	import { getReports } from '$lib/services/reports';
+	import { getReports, getBatchedReports } from '$lib/services/reports';
 	import { authStore, isLeaderRole } from '$lib/stores/auth';
 	import {
 		IconArrowLeft, IconBuilding, IconChevronRight,
@@ -32,20 +32,22 @@
 			}
 			projects = result || [];
 
-			// Check today's reports per project concurrently
+			// Fetch all recent reports for all projects in a single batched API call
 			const today = new Date().toISOString().split('T')[0];
-			await Promise.all(projects.map(async (p) => {
-				try {
-					const reports = await getReports(p.id);
-					const hasToday = (reports || []).some((r: any) => {
+			if (projects.length > 0) {
+				const projectIds = projects.map(p => p.id);
+				const batchedReports = await getBatchedReports(projectIds);
+				
+				// Map locally to avoid N+1 requests
+				projects.forEach(p => {
+					const projectReports = batchedReports.filter((r: any) => r.project_id === p.id);
+					const hasToday = projectReports.some((r: any) => {
 						const rDate = r.date ? r.date.split('T')[0] : '';
 						return rDate === today;
 					});
 					todayReports[p.id] = hasToday;
-				} catch {
-					todayReports[p.id] = false;
-				}
-			}));
+				});
+			}
 		} catch (e) {
 			console.error('Gagal memuat proyek:', e);
 		} finally {

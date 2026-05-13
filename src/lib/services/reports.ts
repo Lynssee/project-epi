@@ -20,6 +20,25 @@ export async function getReports(projectId?: string | number) {
 	}
 }
 
+export async function getBatchedReports(projectIds: (string | number)[]) {
+	try {
+		if (!projectIds || projectIds.length === 0) return [];
+		const result = await directus.request(
+			readItems('reports', {
+				filter: {
+					project_id: { _in: projectIds as string[] }
+				},
+				sort: ['-date_created'],
+				limit: 200
+			})
+		);
+		return result;
+	} catch (error) {
+		handleDirectusError(error);
+		return [];
+	}
+}
+
 export async function getReportByProjectAndDate(projectId: string | number, date: string) {
 	try {
 		const result = await directus.request(
