@@ -9,7 +9,7 @@
 	} from '@tabler/icons-svelte';
 	import { onMount } from 'svelte';
 	import { getProjectById } from '$lib/services/projects';
-	import { submitReport } from '$lib/services/reports';
+	import { submitReport, uploadFile } from '$lib/services/reports';
 	import { authStore, getUserDisplay } from '$lib/stores/auth';
 
 	let projectId = $derived($page.params.project_id);
@@ -67,11 +67,33 @@
 	async function sendReport() {
 		try {
 			submitting = true;
+
+			const attendance_photos = [];
+			for (const photo of reportData.attendance_photos) {
+				const uploaded = await uploadFile(photo.file);
+				if (uploaded && uploaded.id) attendance_photos.push(uploaded.id);
+			}
+
+			const progress_photos = [];
+			for (const photo of reportData.progress_photos) {
+				const uploaded = await uploadFile(photo.file);
+				if (uploaded && uploaded.id) progress_photos.push(uploaded.id);
+			}
+
+			const issue_photos = [];
+			for (const photo of reportData.issue_photos) {
+				const uploaded = await uploadFile(photo.file);
+				if (uploaded && uploaded.id) issue_photos.push(uploaded.id);
+			}
+
 			await submitReport({
 				project_id: Number(projectId),
 				date: new Date().toISOString(),
 				prepared_by: userName,
-				...reportData
+				...reportData,
+				attendance_photos,
+				progress_photos,
+				issue_photos
 			});
 			alert('Laporan berhasil dikirim! ✓');
 			goto('/');

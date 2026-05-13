@@ -65,3 +65,16 @@ export async function submitReport(reportData: any) {
 		return null;
 	}
 }
+
+export async function uploadFile(file: File) {
+	try {
+		const formData = new FormData();
+		formData.append('file', file);
+		const { uploadFiles } = await import('@directus/sdk');
+		const result = await directus.request(uploadFiles(formData));
+		return result;
+	} catch (error) {
+		console.error('Gagal mengunggah file:', error);
+		return null;
+	}
+}
